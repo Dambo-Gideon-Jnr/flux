@@ -1,0 +1,235 @@
+@import "tailwindcss";
+
+:root {
+  --spark-1: #67e8f9;
+  --spark-2: #fbbf24;
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  background-color: #05070d;
+  font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+.font-mono,
+.tabular-nums {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ---------------------------------------------------------- pipe energy */
+
+@keyframes flux-dash {
+  to {
+    stroke-dashoffset: -52;
+  }
+}
+.flux-dash {
+  animation: flux-dash 0.9s linear infinite;
+}
+
+@keyframes flux-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0.72;
+  }
+}
+.flux-pulse {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: flux-pulse 2.1s ease-in-out infinite;
+}
+
+@keyframes flux-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.flux-spin {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: flux-spin 9s linear infinite;
+}
+
+/* --------------------------------------------------------------- accents */
+
+@keyframes flux-blink {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 12px 2px rgba(34, 211, 238, 0.8);
+  }
+  50% {
+    opacity: 0.35;
+    box-shadow: 0 0 2px 0 rgba(34, 211, 238, 0.3);
+  }
+}
+.flux-blink {
+  animation: flux-blink 1.8s ease-in-out infinite;
+}
+
+@keyframes flux-hint {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7), inset 0 0 22px rgba(251, 191, 36, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(251, 191, 36, 0), inset 0 0 8px rgba(251, 191, 36, 0.2);
+  }
+}
+.flux-hint {
+  animation: flux-hint 0.85s ease-out infinite;
+}
+
+@keyframes flux-glow {
+  0%,
+  100% {
+    text-shadow: 0 0 24px rgba(34, 211, 238, 0.45), 0 0 60px rgba(34, 211, 238, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 34px rgba(34, 211, 238, 0.75), 0 0 90px rgba(34, 211, 238, 0.35);
+  }
+}
+.flux-title {
+  background: linear-gradient(180deg, #ffffff 8%, #a5f3fc 55%, #22d3ee 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: flux-glow 3.4s ease-in-out infinite;
+}
+
+/* -------------------------------------------------------------- overlays */
+
+@keyframes flux-fade {
+  from {
+    opacity: 0;
+  }
+}
+.flux-fade {
+  animation: flux-fade 0.35s ease-out both;
+}
+
+@keyframes flux-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+}
+.flux-rise {
+  animation: flux-rise 0.42s cubic-bezier(0.22, 1.2, 0.36, 1) both;
+}
+
+@keyframes flux-pop {
+  0% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.flux-pop {
+  display: inline-flex;
+  animation: flux-pop 0.55s cubic-bezier(0.22, 1.3, 0.36, 1) both;
+}
+
+@keyframes flux-spark {
+  0% {
+    transform: translate(0, 0) scale(0.4);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0);
+    opacity: 0;
+  }
+}
+.flux-spark {
+  animation: flux-spark 1s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+/* ------------------------------------------------------------- backdrop */
+
+@keyframes flux-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2.5%, -3%, 0) scale(1.07);
+  }
+}
+.flux-float {
+  animation: flux-float 16s ease-in-out infinite;
+}
+
+@keyframes flux-ring {
+  0% {
+    transform: scale(0.94);
+    opacity: 0;
+    box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.55);
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.03);
+    opacity: 0.85;
+    box-shadow: 0 0 60px 6px rgba(34, 211, 238, 0.12);
+  }
+}
+.flux-ring {
+  animation: flux-ring 1.4s ease-out infinite;
+}
+
+@keyframes flux-scan {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(1400%);
+  }
+}
+.flux-scan {
+  animation: flux-scan 11s linear infinite;
+}
+
+/* Respect notches / system bars when launched as an installed app */
+.flux-shell {
+  padding-top: max(1.5rem, env(safe-area-inset-top));
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+
+/* App-like text selection: keep taps from highlighting the board */
+button,
+.tile-no-select {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flux-spin,
+  .flux-float,
+  .flux-scan,
+  .flux-dash {
+    animation: none;
+  }
+}
