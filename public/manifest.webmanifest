@@ -3,8 +3,8 @@
   "name": "FLUX · Circuit Puzzle",
   "short_name": "FLUX",
   "description": "Rotate the conduits, route energy from the reactor to every dormant core. A neon circuit-rotation puzzle with endless generated levels.",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "display_override": ["standalone", "fullscreen", "minimal-ui"],
   "orientation": "any",
@@ -13,25 +13,25 @@
   "categories": ["games", "puzzle"],
   "icons": [
     {
-      "src": "./icons/icon-192.png",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icons/icon-512.png",
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icons/icon-maskable-192.png",
+      "src": "/icons/icon-maskable-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "./icons/icon-maskable-512.png",
+      "src": "/icons/icon-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -41,14 +41,14 @@
     {
       "name": "Continue campaign",
       "short_name": "Play",
-      "url": "./?screen=game",
-      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+      "url": "/?screen=game",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Endless mode",
       "short_name": "Endless",
-      "url": "./?mode=endless",
-      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+      "url": "/?mode=endless",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

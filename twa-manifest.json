@@ -1,0 +1,64 @@
+{
+  "packageId": "app.vercel.flux_dusky_six.twa",
+  "host": "flux-dusky-six.vercel.app",
+  "name": "FLUX · Circuit Puzzle",
+  "launcherName": "FLUX",
+  "display": "fullscreen",
+  "themeColor": "#05070D",
+  "themeColorDark": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#05070D",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://flux-dusky-six.vercel.app/icons/icon-512.png",
+  "maskableIconUrl": "https://flux-dusky-six.vercel.app/icons/icon-maskable-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "/home/l2euser/FLUX/android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "1",
+  "appVersionCode": 1,
+  "shortcuts": [
+    {
+      "name": "Continue campaign",
+      "shortName": "Play",
+      "url": "https://flux-dusky-six.vercel.app/?screen=game",
+      "chosenIconUrl": "https://flux-dusky-six.vercel.app/icons/icon-192.png"
+    },
+    {
+      "name": "Endless mode",
+      "shortName": "Endless",
+      "url": "https://flux-dusky-six.vercel.app/?mode=endless",
+      "chosenIconUrl": "https://flux-dusky-six.vercel.app/icons/icon-192.png"
+    }
+  ],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://flux-dusky-six.vercel.app/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://flux-dusky-six.vercel.app/",
+  "minSdkVersion": 21,
+  "orientation": "portrait",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [
+    "standalone",
+    "fullscreen",
+    "minimal-ui"
+  ],
+  "appVersion": "1"
+}
