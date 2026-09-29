@@ -3,7 +3,7 @@
   "host": "flux-dusky-six.vercel.app",
   "name": "FLUX · Circuit Puzzle",
   "launcherName": "FLUX",
-  "display": "fullscreen",
+  "display": "standalone",
   "themeColor": "#05070D",
   "themeColorDark": "#000000",
   "navigationColor": "#000000",
