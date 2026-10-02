@@ -26,6 +26,15 @@ import { setMuted, sfx } from "./lib/sound";
 type Screen = "home" | "levels" | "howto" | "game";
 type Mode = "campaign" | "daily" | "endless";
 
+function createSeed() {
+  const values = new Uint32Array(1);
+  if (typeof crypto !== "undefined" && crypto.getRandomValues) {
+    crypto.getRandomValues(values);
+    return values[0];
+  }
+  return Math.floor(Math.random() * 0x1_0000_0000);
+}
+
 function dailyLevelId() {
   const now = new Date();
   const key = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
@@ -183,6 +192,10 @@ function Game({
   const select = useCallback((i: number) => setSelected(i), []);
 
   const restart = useCallback(() => {
+    if (mode === "endless") {
+      onReplay();
+      return;
+    }
     if (hintTimer.current) window.clearTimeout(hintTimer.current);
     setRotations(level.base.map(() => 0));
     setMoves(0);
@@ -195,7 +208,7 @@ function Game({
     // suppress the "growing network" chime for the freshly reset board
     prevLit.current = Number.MAX_SAFE_INTEGER;
     sfx.start();
-  }, [level]);
+  }, [level, mode, onReplay]);
 
   const takeHint = useCallback(() => {
     if (won) return;
@@ -344,6 +357,7 @@ export default function App() {
     if (params.get("mode") === "daily") return dailyLevelId();
     return params.get("mode") === "endless" ? TOTAL_LEVELS + 1 : 1;
   });
+  const [levelSeed, setLevelSeed] = useState(createSeed);
   const [replayNonce, setReplayNonce] = useState(0);
   const [showPublish, setShowPublish] = useState(false);
   const install = useInstallPrompt();
@@ -351,7 +365,10 @@ export default function App() {
   useEffect(() => saveProgress(progress), [progress]);
   useEffect(() => setMuted(progress.muted), [progress.muted]);
 
-  const level = useMemo(() => generateLevel(levelId), [levelId]);
+  const level = useMemo(
+    () => generateLevel(levelId, mode === "endless" ? levelSeed : undefined),
+    [levelId, levelSeed, mode],
+  );
 
   const totalStars = useMemo(
     () => Object.values(progress.stars).reduce((a, b) => a + b, 0),
@@ -365,6 +382,7 @@ export default function App() {
           const round = Math.max(1, id - TOTAL_LEVELS);
           return { ...p, endlessBest: Math.max(p.endlessBest, round) };
         }
+        if (m === "daily") return p;
         const prevStars = p.stars[id] ?? 0;
         const prevBest = p.best[id];
         return {
@@ -398,6 +416,7 @@ export default function App() {
   const startEndless = useCallback(() => {
     setMode("endless");
     setLevelId((id) => (id > TOTAL_LEVELS ? id : TOTAL_LEVELS + 1));
+    setLevelSeed(createSeed());
     setScreen("game");
     sfx.start();
   }, []);
@@ -407,6 +426,7 @@ export default function App() {
       setLevelId(dailyLevelId());
     } else if (mode === "endless") {
       setLevelId((id) => id + 1);
+      setLevelSeed(createSeed());
     } else if (levelId < TOTAL_LEVELS) {
       setLevelId((id) => id + 1);
     } else {
@@ -417,8 +437,9 @@ export default function App() {
   }, [mode, levelId]);
 
   const replay = useCallback(() => {
+    if (mode === "endless") setLevelSeed(createSeed());
     setReplayNonce((n) => n + 1);
-  }, []);
+  }, [mode]);
 
   return (
     <div className="relative min-h-screen w-full text-slate-200">

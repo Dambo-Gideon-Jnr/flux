@@ -129,8 +129,8 @@ Runs the Bubblewrap init/build and digital-asset-links steps for you.
 > every joint where two conduits meet, and your job is to route that power to every
 > dormant core on the board.
 >
-> • 24 handcrafted-difficulty levels, from a gentle 3×3 warm-up to a 7×8 master board
-> • Endless mode with infinite procedurally generated circuits — every one guaranteed solvable
+> • 50 progressively scaled campaign levels, from a gentle 3×3 warm-up to a 7×8 master board
+> • Endless mode with infinite randomized, guaranteed-solvable circuit layouts
 > • Three-star ratings against an optimal turn target
 > • Hints, timers and best-move records
 > • Plays entirely offline, no account, no ads, no tracking

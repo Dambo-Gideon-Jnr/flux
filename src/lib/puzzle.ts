@@ -24,7 +24,7 @@ const DIRS = [
   { bit: W, dx: -1, dy: 0, opp: E },
 ];
 
-export const TOTAL_LEVELS = 24;
+export const TOTAL_LEVELS = 50;
 
 /* ------------------------------------------------------------------ rng */
 
@@ -111,8 +111,11 @@ const PRESETS: Preset[] = [
   { w: 7, h: 8, sinks: 4, label: "Master" },
 ];
 
-export function presetIndexFor(id: number): number {
-  if (id > TOTAL_LEVELS) return 5 + (hash(id * 104729) % 5); // endless: varied hard boards
+export function presetIndexFor(id: number, seed?: number): number {
+  if (id > TOTAL_LEVELS) {
+    const endlessSeed = seed === undefined ? id * 104729 : hash(seed, id);
+    return 5 + (hash(endlessSeed) % 5);
+  }
   return Math.min(Math.floor(((id - 1) * PRESETS.length) / TOTAL_LEVELS), PRESETS.length - 1);
 }
 
@@ -120,8 +123,8 @@ export function levelLabel(id: number): string {
   return PRESETS[presetIndexFor(id)].label;
 }
 
-function presetFor(id: number): Preset {
-  return PRESETS[presetIndexFor(id)];
+function presetFor(id: number, seed?: number): Preset {
+  return PRESETS[presetIndexFor(id, seed)];
 }
 
 /* ----------------------------------------------------------- generation */
@@ -186,11 +189,13 @@ function bfsDist(masks: number[], w: number, h: number, from: number) {
   return dist;
 }
 
-export function generateLevel(id: number): Level {
-  const preset = presetFor(id);
+export function generateLevel(id: number, seed?: number): Level {
+  const preset = presetFor(id, seed);
   const { w, h } = preset;
   const size = w * h;
-  const rng = mulberry32(hash(0x9e3779b9, id * 7919, id));
+  const rng = mulberry32(
+    seed === undefined ? hash(0x9e3779b9, id * 7919, id) : hash(seed, id),
+  );
   const solution = buildTree(w, h, rng);
 
   // leaves = dead ends, the nicest places for a source / a sink
