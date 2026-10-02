@@ -24,7 +24,18 @@ import {
 import { setMuted, sfx } from "./lib/sound";
 
 type Screen = "home" | "levels" | "howto" | "game";
-type Mode = "campaign" | "endless";
+type Mode = "campaign" | "daily" | "endless";
+
+function dailyLevelId() {
+  const now = new Date();
+  const key = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+  let hash = 2166136261;
+  for (let i = 0; i < key.length; i++) {
+    hash ^= key.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return ((hash >>> 0) % TOTAL_LEVELS) + 1;
+}
 
 /* --------------------------------------------------------------- backdrop */
 
@@ -272,10 +283,12 @@ function Game({
             <div className="text-lg font-black tracking-[0.18em] text-cyan-200">
               {mode === "endless"
                 ? `ROUND ${level.id - TOTAL_LEVELS}`
-                : `LEVEL ${String(level.id).padStart(2, "0")}`}
+                : mode === "daily"
+                  ? `DAILY ${String(level.id).padStart(2, "0")}`
+                  : `LEVEL ${String(level.id).padStart(2, "0")}`}
             </div>
             <div className="mt-0.5 text-[10px] uppercase tracking-[0.3em] text-slate-500">
-              {levelLabel(level.id)} · target {level.par} turns
+              {mode === "daily" ? "Daily challenge" : levelLabel(level.id)} · target {level.par} turns
             </div>
           </div>
         </div>
@@ -296,6 +309,7 @@ function Game({
           stars={stars}
           flawless={flawless}
           endlessRound={mode === "endless" ? level.id - TOTAL_LEVELS : null}
+          mode={mode}
           isLast={mode === "campaign" && level.id >= TOTAL_LEVELS}
           onNext={onNext}
           onReplay={onReplay}
@@ -317,14 +331,17 @@ export default function App() {
   const [screen, setScreen] = useState<Screen>(() =>
     params.get("screen") === "game" ? "game" : "home",
   );
-  const [mode, setMode] = useState<Mode>(() =>
-    params.get("mode") === "endless" ? "endless" : "campaign",
-  );
+  const [mode, setMode] = useState<Mode>(() => {
+    if (params.get("mode") === "daily") return "daily";
+    if (params.get("mode") === "endless") return "endless";
+    return "campaign";
+  });
   const [levelId, setLevelId] = useState(() => {
     const requested = Number(params.get("level"));
     if (Number.isFinite(requested) && requested >= 1 && requested <= TOTAL_LEVELS) {
       return Math.floor(requested);
     }
+    if (params.get("mode") === "daily") return dailyLevelId();
     return params.get("mode") === "endless" ? TOTAL_LEVELS + 1 : 1;
   });
   const [replayNonce, setReplayNonce] = useState(0);
@@ -371,6 +388,13 @@ export default function App() {
     sfx.start();
   }, []);
 
+  const startDaily = useCallback(() => {
+    setMode("daily");
+    setLevelId(dailyLevelId());
+    setScreen("game");
+    sfx.start();
+  }, []);
+
   const startEndless = useCallback(() => {
     setMode("endless");
     setLevelId((id) => (id > TOTAL_LEVELS ? id : TOTAL_LEVELS + 1));
@@ -379,7 +403,9 @@ export default function App() {
   }, []);
 
   const goNext = useCallback(() => {
-    if (mode === "endless") {
+    if (mode === "daily") {
+      setLevelId(dailyLevelId());
+    } else if (mode === "endless") {
       setLevelId((id) => id + 1);
     } else if (levelId < TOTAL_LEVELS) {
       setLevelId((id) => id + 1);
@@ -407,6 +433,7 @@ export default function App() {
               totalStars={totalStars}
               onContinue={() => startCampaign(Math.min(progress.unlocked, TOTAL_LEVELS))}
               onLevels={() => setScreen("levels")}
+              onDaily={startDaily}
               onEndless={startEndless}
               onHowTo={() => setScreen("howto")}
               onPublish={() => setShowPublish(true)}
@@ -418,13 +445,13 @@ export default function App() {
               }
             />
           )}
-
           {screen === "levels" && (
             <LevelSelect
               unlocked={progress.unlocked}
               stars={progress.stars}
               onPick={startCampaign}
               onBack={() => setScreen("home")}
+              onDaily={startDaily}
               onEndless={startEndless}
             />
           )}

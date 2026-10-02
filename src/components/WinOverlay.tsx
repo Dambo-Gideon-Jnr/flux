@@ -11,6 +11,7 @@ type Props = {
   stars: number;
   flawless: boolean;
   endlessRound: number | null;
+  mode: "campaign" | "daily" | "endless";
   isLast: boolean;
   onNext: () => void;
   onReplay: () => void;
@@ -24,6 +25,7 @@ export function WinOverlay({
   stars,
   flawless,
   endlessRound,
+  mode,
   isLast,
   onNext,
   onReplay,
@@ -57,7 +59,11 @@ export function WinOverlay({
       <SparkBurst />
       <div className="flux-rise relative w-full max-w-sm rounded-3xl border border-cyan-300/20 bg-gradient-to-b from-slate-900/95 to-slate-950/95 p-6 text-center shadow-[0_0_60px_-18px_rgba(34,211,238,0.8)]">
         <div className="text-[11px] font-semibold uppercase tracking-[0.34em] text-cyan-300/80">
-          {endlessRound !== null ? `Round ${endlessRound} cleared` : `Level ${level.id} cleared`}
+          {endlessRound !== null
+            ? `Round ${endlessRound} cleared`
+            : mode === "daily"
+              ? `Daily challenge cleared`
+              : `Level ${level.id} cleared`}
         </div>
         <h2 className="mt-1 text-3xl font-black tracking-tight text-white">
           {flawless ? "FLAWLESS" : "SYSTEM ONLINE"}
@@ -94,7 +100,11 @@ export function WinOverlay({
             onClick={onNext}
             className="rounded-2xl bg-gradient-to-r from-cyan-400 to-sky-500 px-6 py-3 text-sm font-bold text-slate-950 shadow-[0_0_30px_-8px_rgba(34,211,238,0.9)] transition active:scale-95"
           >
-            {isLast ? "Enter endless mode →" : "Next level →"}
+            {mode === "daily"
+              ? "Fresh daily board →"
+              : isLast
+                ? "Enter endless mode →"
+                : "Next level →"}
             {!paused && <span className="ml-1 font-mono">({Math.ceil(left / 1000)})</span>}
           </button>
           <div className="h-1 w-full overflow-hidden rounded-full bg-white/10">

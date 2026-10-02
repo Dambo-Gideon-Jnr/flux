@@ -60,7 +60,7 @@ function GhostButton({
 
 type HudProps = {
   levelId: number;
-  mode: "campaign" | "endless";
+  mode: "campaign" | "daily" | "endless";
   moves: number;
   par: number;
   time: number;
@@ -123,7 +123,11 @@ export function Hud({
           <div className="flex h-10 items-center gap-2 rounded-xl border border-cyan-300/25 bg-cyan-400/10 px-3">
             <span className="h-2 w-2 rounded-full bg-cyan-300 flux-blink" />
             <span className="text-sm font-semibold tracking-wide text-cyan-100">
-              {mode === "endless" ? "ENDLESS" : `LVL ${String(levelId).padStart(2, "0")}`}
+              {mode === "endless"
+                ? "ENDLESS"
+                : mode === "daily"
+                  ? "DAILY"
+                  : `LVL ${String(levelId).padStart(2, "0")}`}
             </span>
           </div>
           <span className="hidden text-xs uppercase tracking-[0.2em] text-slate-500 sm:inline">
@@ -263,6 +267,7 @@ export function HomeScreen({
   totalStars,
   onContinue,
   onLevels,
+  onDaily,
   onEndless,
   onHowTo,
   installSlot,
@@ -273,6 +278,7 @@ export function HomeScreen({
   totalStars: number;
   onContinue: () => void;
   onLevels: () => void;
+  onDaily: () => void;
   onEndless: () => void;
   onHowTo: () => void;
   installSlot?: ReactNode;
@@ -332,6 +338,13 @@ export function HomeScreen({
         </div>
         <button
           type="button"
+          onClick={onDaily}
+          className="rounded-2xl border border-amber-400/25 bg-amber-500/10 px-4 py-3 text-sm font-semibold text-amber-100 transition-all hover:border-amber-300/50 hover:bg-amber-500/20 active:scale-95"
+        >
+          Daily challenge
+        </button>
+        <button
+          type="button"
           onClick={onEndless}
           className="rounded-2xl border border-violet-400/25 bg-violet-500/10 px-4 py-3 text-sm font-semibold text-violet-200 transition-all hover:border-violet-300/50 hover:bg-violet-500/20 active:scale-95"
         >
@@ -367,12 +380,14 @@ export function LevelSelect({
   stars,
   onPick,
   onBack,
+  onDaily,
   onEndless,
 }: {
   unlocked: number;
   stars: Record<number, number>;
   onPick: (id: number) => void;
   onBack: () => void;
+  onDaily: () => void;
   onEndless: () => void;
 }) {
   const done = TOTAL_LEVELS;
@@ -422,13 +437,22 @@ export function LevelSelect({
         })}
       </div>
 
-      <button
-        type="button"
-        onClick={onEndless}
-        className="rounded-2xl border border-violet-400/25 bg-violet-500/10 px-4 py-3 text-sm font-semibold text-violet-200 transition-all hover:border-violet-300/50 hover:bg-violet-500/20 active:scale-95"
-      >
-        ♾ Endless mode — infinite generated circuits
-      </button>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <button
+          type="button"
+          onClick={onDaily}
+          className="rounded-2xl border border-amber-400/25 bg-amber-500/10 px-4 py-3 text-sm font-semibold text-amber-100 transition-all hover:border-amber-300/50 hover:bg-amber-500/20 active:scale-95"
+        >
+          ✦ Daily challenge
+        </button>
+        <button
+          type="button"
+          onClick={onEndless}
+          className="rounded-2xl border border-violet-400/25 bg-violet-500/10 px-4 py-3 text-sm font-semibold text-violet-200 transition-all hover:border-violet-300/50 hover:bg-violet-500/20 active:scale-95"
+        >
+          ♾ Endless mode
+        </button>
+      </div>
     </div>
   );
 }
