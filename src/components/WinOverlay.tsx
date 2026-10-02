@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Stars, SparkBurst, formatTime } from "./Panels";
 
-const AUTO_ADVANCE_MS = 3000;
+const AUTO_ADVANCE_MS = 5000;
 import type { Level } from "../lib/puzzle";
 
 type Props = {
@@ -35,6 +35,7 @@ export function WinOverlay({
   const [paused, setPaused] = useState(false);
   const [left, setLeft] = useState(AUTO_ADVANCE_MS);
   const nextRef = useRef(onNext);
+  const advanced = useRef(false);
   nextRef.current = onNext;
 
   useEffect(() => {
@@ -46,7 +47,10 @@ export function WinOverlay({
       if (remaining <= 0) {
         window.clearInterval(t);
         setLeft(0);
-        nextRef.current();
+        if (!advanced.current) {
+          advanced.current = true;
+          nextRef.current();
+        }
       } else {
         setLeft(remaining);
       }
@@ -97,7 +101,11 @@ export function WinOverlay({
         <div className="mt-6 flex flex-col gap-2">
           <button
             type="button"
-            onClick={onNext}
+            onClick={() => {
+              if (advanced.current) return;
+              advanced.current = true;
+              onNext();
+            }}
             className="rounded-2xl bg-gradient-to-r from-cyan-400 to-sky-500 px-6 py-3 text-sm font-bold text-slate-950 shadow-[0_0_30px_-8px_rgba(34,211,238,0.9)] transition active:scale-95"
           >
             {mode === "daily"
@@ -107,6 +115,11 @@ export function WinOverlay({
                 : "Next level →"}
             {!paused && <span className="ml-1 font-mono">({Math.ceil(left / 1000)})</span>}
           </button>
+          <p className="text-xs text-slate-500" aria-live="polite">
+            {paused
+              ? "Auto-advance paused"
+              : `Moving on automatically in ${Math.ceil(left / 1000)} seconds`}
+          </p>
           <div className="h-1 w-full overflow-hidden rounded-full bg-white/10">
             <div
               className="h-full bg-cyan-300"
